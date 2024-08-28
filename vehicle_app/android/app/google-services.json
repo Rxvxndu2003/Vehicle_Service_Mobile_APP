@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "664692673074",
+    "project_id": "vehicle-management-syste-d435b",
+    "storage_bucket": "vehicle-management-syste-d435b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664692673074:android:08e9c1f94c08701650ca2b",
+        "android_client_info": {
+          "package_name": "com.example.vehicle_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANUf8dDcfTyIMkPOc76NV2l7GoxVVZOWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

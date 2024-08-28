@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "BMW M6",
+    "type": "Car",
+    "number": "CBB-2345",
+    "image": "images/bmw.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Benz AMG",
+    "type": "Car",
+    "number": "CAI-7892",
+    "image": "images/benz.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Aston Martin",
+    "type": "Car",
+    "number": "CBI-5678",
+    "image": "images/aston.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Toyota Sahara V8",
+    "type": "Car",
+    "number": "CBC-5688",
+    "image": "images/v8.jpg"
+  }
+]

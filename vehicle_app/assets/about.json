@@ -1,0 +1,109 @@
+{
+  "service": [
+    {
+      "icon": "fa-certificate",
+      "title": "Quality Servicing",
+      "description": "M&N Vehicle Service Center offers high-quality repairs at competitive prices.",
+      "link": "Read More"
+    },
+    {
+      "icon": "fa-users-cog",
+      "title": "Expert Workers",
+      "description": "Leave it to the experts - M&N's skilled technicians get the job done right.",
+      "link": "Read More"
+    },
+    {
+      "icon": "fa-tools",
+      "title": "Modern Equipment",
+      "description": "M&N uses state-of-the-art equipment for the most accurate repairs.",
+      "link": "Read More"
+    }
+  ],
+  "about": {
+    "image": "images/about.jpg",
+    "experience_years": 15,
+    "title": "CarServ Is The Best Place For Your Auto Care",
+    "description": "At M&N Vehicle Service Center, our team of expert technicians uses the latest technology...",
+    "features": [
+      {
+        "number": "01",
+        "title": "Professional & Expert",
+        "subtitle": "Leave it to the experts"
+      },
+      {
+        "number": "02",
+        "title": "Quality Servicing Center",
+        "subtitle": "high-quality repairs at competitive prices."
+      },
+      {
+        "number": "03",
+        "title": "Awards Winning Workers",
+        "subtitle": "M&N's award-winning technicians keep your car running like a champ."
+      }
+    ]
+  },
+  "facts": [
+    {
+      "icon": "fa-check",
+      "number": 15,
+      "text": "Years Experience"
+    },
+    {
+      "icon": "fa-users-cog",
+      "number": 150,
+      "text": "Expert Technicians"
+    },
+    {
+      "icon": "fa-users",
+      "number": 450,
+      "text": "Satisfied Clients"
+    },
+    {
+      "icon": "fa-car",
+      "number": 600,
+      "text": "Complete Projects"
+    }
+  ],
+  "team": [
+    {
+      "image": "images/team-1.jpg",
+      "name": "Full Name 1",
+      "designation": "Designation 1",
+      "social_links": {
+        "facebook": "",
+        "twitter": "",
+        "instagram": ""
+      }
+    },
+    {
+      "image": "images/team-2.jpg",
+      "name": "Full Name 2",
+      "designation": "Designation 2",
+      "social_links": {
+        "facebook": "",
+        "twitter": "",
+        "instagram": ""
+      }
+    },
+    {
+      "image": "images/team-3.jpg",
+      "name": "Full Name 3",
+      "designation": "Designation 3",
+      "social_links": {
+        "facebook": "",
+        "twitter": "",
+        "instagram": ""
+      }
+    },
+    {
+      "image": "images/team-4.jpg",
+      "name": "Full Name 4",
+      "designation": "Designation 4",
+      "social_links": {
+        "facebook": "",
+        "twitter": "",
+        "instagram": ""
+      }
+    }
+  ]
+}
