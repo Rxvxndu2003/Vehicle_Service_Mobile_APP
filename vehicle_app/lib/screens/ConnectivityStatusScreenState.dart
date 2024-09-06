@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_app/screens/menue_screen.dart';
 
 class ConnectivityStatusScreen extends StatefulWidget {
+  const ConnectivityStatusScreen({super.key});
+
   @override
   _ConnectivityStatusScreenState createState() => _ConnectivityStatusScreenState();
 }
@@ -17,7 +18,7 @@ class _ConnectivityStatusScreenState extends State<ConnectivityStatusScreen> {
   void initState() {
     super.initState();
     _checkConnectivity();
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       _checkConnectivity();
     });
   }
@@ -51,27 +52,27 @@ class _ConnectivityStatusScreenState extends State<ConnectivityStatusScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 55),
+        padding: const EdgeInsets.only(top: 55),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Row(
                 children: [
                   InkWell(
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => MenueScreen()),
+                        MaterialPageRoute(builder: (context) => const MenueScreen()),
                       );
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.arrow_back,
                       size: 30,
                     ),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   Expanded(
                     child: Text(
                       "Network Connectivity Status",
@@ -87,11 +88,11 @@ class _ConnectivityStatusScreenState extends State<ConnectivityStatusScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 70),
+            const SizedBox(height: 70),
             Center(
               child: Container(
-                padding: EdgeInsets.all(20),
-                margin: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
@@ -100,7 +101,7 @@ class _ConnectivityStatusScreenState extends State<ConnectivityStatusScreen> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
@@ -117,8 +118,8 @@ class _ConnectivityStatusScreenState extends State<ConnectivityStatusScreen> {
                           ? Colors.red
                           : Colors.green,
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'Connection Status:',
                       style: TextStyle(
                         fontSize: 24,
@@ -126,7 +127,7 @@ class _ConnectivityStatusScreenState extends State<ConnectivityStatusScreen> {
                         color: Colors.teal,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       _connectionStatus,
                       style: TextStyle(

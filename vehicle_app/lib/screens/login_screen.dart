@@ -8,8 +8,11 @@ import 'package:vehicle_app/controllers/user_controller.dart';
 import 'package:vehicle_app/screens/home_screen.dart';
 import 'package:vehicle_app/screens/signup_screen.dart';
 import 'package:vehicle_app/screens/welcome_screen.dart';
+import 'package:vehicle_app/widgets/navbar_roots.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -27,74 +30,78 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _getCsrfToken() async {
     await http.get(Uri.parse('https://4gbxsolutions.com/sanctum/csrf-cookie'));
   }
-Future<void> _login() async {
-  final email = _emailController.text;
-  final password = _passwordController.text;
 
-  setState(() {
-    _isEmailEmpty = email.isEmpty;
-    _isPasswordEmpty = password.isEmpty;
-  });
+  Future<void> _login() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
-  if (_isEmailEmpty || _isPasswordEmpty) {
-    return;
-  }
+    setState(() {
+      _isEmailEmpty = email.isEmpty;
+      _isPasswordEmpty = password.isEmpty;
+    });
 
-  try {
-    await _getCsrfToken(); // Ensure CSRF token is fetched if required by backend
+    if (_isEmailEmpty || _isPasswordEmpty) {
+      return; // Stop if email or password is empty
+    }
 
-    final response = await http.post(
-      Uri.parse('https://4gbxsolutions.com/api/auth/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
-    );
+    try {
+      await _getCsrfToken(); // Ensure CSRF token is fetched if required by backend
 
-    final responseBody = jsonDecode(response.body);
-    print('API Response: $responseBody');
+      final response = await http.post(
+        Uri.parse('https://4gbxsolutions.com/api/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email, 'password': password}),
+      );
 
-    if (response.statusCode == 200 && responseBody['status'] == true) {
-      final token = responseBody['token'];
+      final responseBody = jsonDecode(response.body);
+      print('API Response: $responseBody');
 
-      if (token == null || token.isEmpty) {
+      if (response.statusCode == 200 && responseBody['status'] == true) {
+        final token = responseBody['token'];
+
+        if (token == null || token.isEmpty) {
+          setState(() {
+            _errorMessage = 'Failed to retrieve token.';
+          });
+          return;
+        }
+
+        // Save the token
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+
+        // Update the UserController with the user's email
+        userController.setUserEmail(email);
+
+        // Optional: Log the token to verify
+        print('Saved Token: $token');
+
+        // Navigate to HomeScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const NavbarRoots()),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login successful')),
+        );
+      } else {
         setState(() {
-          _errorMessage = 'Failed to retrieve token.';
+          _errorMessage = responseBody['message'] ?? 'Login failed';
         });
-        return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(_errorMessage!)),
+        );
       }
-
-      // Save the token
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', token);
-
-      // Optional: Log the token to verify
-      print('Saved Token: $token');
-
-      // Navigate to HomeScreen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login successful')),
-      );
-    } else {
+    } catch (e) {
+      print('Login Error: $e');
       setState(() {
-        _errorMessage = responseBody['message'] ?? 'Login failed';
+        _errorMessage = 'An error occurred. Please try again.';
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(_errorMessage!)),
       );
     }
-  } catch (e) {
-    print('Login Error: $e');
-    setState(() {
-      _errorMessage = 'An error occurred. Please try again.';
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(_errorMessage!)),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -106,11 +113,11 @@ Future<void> _login() async {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 TextButton(
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => WelcomeScreen(),
+                      builder: (context) => const WelcomeScreen(),
                     ));
                   },
                   child: Text(
@@ -123,39 +130,39 @@ Future<void> _login() async {
                     ),
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Center(
                   child: Image.asset(
                     "images/M&NLogo.png",
                     height: 150,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 if (_errorMessage != null)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text(
                       _errorMessage!,
-                      style: TextStyle(color: Colors.red, fontSize: 16),
+                      style: const TextStyle(color: Colors.red, fontSize: 16),
                     ),
                   ),
                 Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   child: TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      label: Text("Enter Email"),
-                      prefixIcon: Icon(Icons.person),
+                      label: const Text("Enter Email"),
+                      prefixIcon: const Icon(Icons.person),
                       errorText: _isEmailEmpty ? 'Email is required' : null,
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   child: TextField(
                     controller: _passwordController,
                     obscureText: passToggle,
@@ -163,8 +170,8 @@ Future<void> _login() async {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      label: Text("Enter Password"),
-                      prefixIcon: Icon(Icons.lock),
+                      label: const Text("Enter Password"),
+                      prefixIcon: const Icon(Icons.lock),
                       suffixIcon: InkWell(
                         onTap: () {
                           setState(() {
@@ -181,18 +188,18 @@ Future<void> _login() async {
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: SizedBox(
                     width: double.infinity,
                     child: Material(
-                      color: Color.fromARGB(255, 255, 196, 0),
+                      color: const Color.fromARGB(255, 255, 196, 0),
                       borderRadius: BorderRadius.circular(10),
                       child: InkWell(
                         onTap: _login,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                           child: Center(
                             child: Text(
                               "Log In",
@@ -208,11 +215,11 @@ Future<void> _login() async {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Don't have an account? ",
                       style: TextStyle(
                         fontSize: 18,
@@ -223,7 +230,7 @@ Future<void> _login() async {
                     TextButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => SignUpScreen(),
+                          builder: (context) => const SignUpScreen(),
                         ));
                       },
                       child: Text(

@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_app/screens/add_vehicle.dart';
@@ -5,7 +6,12 @@ import 'package:vehicle_app/screens/book_now.dart';
 import 'package:vehicle_app/screens/menue_screen.dart';
 import 'package:vehicle_app/widgets/items_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   List service = [
     "Body Wash",
     "Full Service",
@@ -18,10 +24,10 @@ class HomeScreen extends StatelessWidget {
   ];
 
   List imgs = [
-    "caltexcvt.png",
-    "geolander.png",
-    "powersteering.png",
-    "preprotection.jpg",
+    "images/about.jpg",
+    "images/aston.jpg",
+    "images/benz.jpg",
+    "images/bmw.jpg",
   ];
 
   List names = [
@@ -41,82 +47,82 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: Icon(
+            Icons.menu,
+            size: 32,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MenueScreen()),
+            );
+          },
+        ),
+        title: Text(
+          "M & N Service",
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications,
+              size: 28,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              // Handle notification icon press
+            },
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 40),
+        padding: const EdgeInsets.only(top: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => MenueScreen()
-                      ));
-                    },
-                    child: Icon(Icons.menu, size: 40),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text(
-                      "M & N Service",
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.notification_add_sharp,
-                      size: 40,
-                      color: Color.fromARGB(255, 255, 196, 0),
-                    ),
-                  ),
-                ],
+            // Carousel Slider
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 200,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                viewportFraction: 0.9,
               ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 15),
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              height: 50,
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 233, 234, 237),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Search here...",
-                        hintStyle: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.black
-                              : Colors.black,
+              items: imgs.map((imagePath) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      // margin: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                          image: AssetImage(imagePath),
+                          fit: BoxFit.cover,
                         ),
-                        border: InputBorder.none,
                       ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.search_sharp,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.black
-                        : Colors.black,
-                  ),
-                ],
-              ),
+                    );
+                  },
+                );
+              }).toList(),
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -126,9 +132,8 @@ class HomeScreen extends StatelessWidget {
                   title: "Book Now",
                   subtitle: "Make an appointment",
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => BookNow()
-                    ));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const BookNow()));
                   },
                 ),
                 _buildFeatureCard(
@@ -137,16 +142,15 @@ class HomeScreen extends StatelessWidget {
                   title: "Manage Vehicle",
                   subtitle: "Add your own Vehicle",
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => AddVehicle()
-                    ));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const AddVehicle()));
                   },
                 ),
               ],
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             Padding(
-              padding: EdgeInsets.only(left: 15),
+              padding: const EdgeInsets.only(left: 15),
               child: Text(
                 "Our Services",
                 style: TextStyle(
@@ -166,12 +170,13 @@ class HomeScreen extends StatelessWidget {
                 itemCount: service.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 255, 196, 0),
+                      color: const Color.fromARGB(255, 255, 196, 0),
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black12,
                           blurRadius: 4,
@@ -182,7 +187,7 @@ class HomeScreen extends StatelessWidget {
                     child: Center(
                       child: Text(
                         service[index],
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.black,
@@ -193,9 +198,9 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             Padding(
-              padding: EdgeInsets.only(left: 15),
+              padding: const EdgeInsets.only(left: 15),
               child: Text(
                 "Our Recent Products",
                 style: TextStyle(
@@ -207,22 +212,26 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            ItemsWidget(),
+            const ItemsWidget(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFeatureCard(BuildContext context, {required IconData icon, required String title, required String subtitle, required VoidCallback onTap}) {
+  Widget _buildFeatureCard(BuildContext context,
+      {required IconData icon,
+      required String title,
+      required String subtitle,
+      required VoidCallback onTap}) {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 255, 196, 0),
+          color: const Color.fromARGB(255, 255, 196, 0),
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black,
               blurRadius: 6,
@@ -234,8 +243,8 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
               ),
@@ -245,19 +254,19 @@ class HomeScreen extends StatelessWidget {
                 size: 35,
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
               subtitle,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Color.fromARGB(255, 72, 71, 71),
               ),
             ),

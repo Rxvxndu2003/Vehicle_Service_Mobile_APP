@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,8 @@ import 'package:vehicle_app/screens/vehicles_screen.dart';
 
 
 class NavbarRoots extends StatefulWidget{
+  const NavbarRoots({super.key});
+
   @override
   State<NavbarRoots> createState() => _NavbarRootsState();
 }
@@ -22,21 +23,21 @@ class _NavbarRootsState extends State<NavbarRoots> {
   int _selectedIndex = 0;
   final _screens = [
     //home screen
-    HomeScreen(),
+     HomeScreen(),
     //book now
-    ScheduleScreen(),
+    const ScheduleScreen(),
     //Appointment
-    ProductsPage(),
+    const ProductsPage(),
     //Products
-    ServiceScreen(),
+    const ServiceScreen(),
     //Services
-    VehiclesScreen(),
+    const VehiclesScreen(),
     //Vehicle
 
 
-    BookNow(),
-    AddVehicle(),
-    MenueScreen(),
+    const BookNow(),
+    const AddVehicle(),
+    const MenueScreen(),
 
 
 
@@ -46,16 +47,16 @@ class _NavbarRootsState extends State<NavbarRoots> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: _screens[_selectedIndex],
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 80,
         child: BottomNavigationBar(
           // backgroundColor: Colors.white,
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: Color.fromARGB(255, 255, 196, 0),
+          selectedItemColor: const Color.fromARGB(255, 255, 196, 0),
           unselectedItemColor:Theme.of(context).brightness == Brightness.dark
                           ? Colors.white
                           : Colors.black,
-          selectedLabelStyle: TextStyle(
+          selectedLabelStyle: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
           ),
@@ -65,7 +66,7 @@ class _NavbarRootsState extends State<NavbarRoots> {
               _selectedIndex = index;
             });
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_filled),
               label: "Home",

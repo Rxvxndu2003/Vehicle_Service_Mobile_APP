@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:vehicle_app/screens/home_screen.dart';
 import 'package:vehicle_app/screens/login_screen.dart';
 import 'package:vehicle_app/screens/signup_screen.dart';
 import 'package:vehicle_app/widgets/navbar_roots.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,18 +14,18 @@ class WelcomeScreen extends StatelessWidget {
           return Container(
             width: constraints.maxWidth,
             height: constraints.maxHeight,
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => NavbarRoots()),
+                          MaterialPageRoute(builder: (context) => const NavbarRoots()),
                         );
                       },
                       child: Text(
@@ -38,15 +39,15 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Image.asset(
                       "images/vehicle_service.png",
                       height: constraints.maxHeight * 0.3,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Center(
                     child: Text(
                       "M & N Vehicle Service",
@@ -61,7 +62,7 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Center(
                     child: Text(
                       "Center",
@@ -76,35 +77,35 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     "We are the best service center in the city",
                     style: TextStyle(
                       fontSize: 18,
                       color: Theme.of(context).brightness == Brightness.dark
-                          ? Color.fromARGB(255, 201, 198, 198)
-                          : Color.fromARGB(255, 150, 147, 147),
+                          ? const Color.fromARGB(255, 201, 198, 198)
+                          : const Color.fromARGB(255, 150, 147, 147),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
                         child: Material(
-                          color: Color.fromARGB(255, 255, 196, 0),
+                          color: const Color.fromARGB(255, 255, 196, 0),
                           borderRadius: BorderRadius.circular(10),
                           child: InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LoginScreen()),
+                                    builder: (context) => const LoginScreen()),
                               );
                             },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 20),
                               child: Center(
                                 child: Text(
@@ -120,21 +121,21 @@ class WelcomeScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Material(
-                          color: Color.fromARGB(255, 255, 196, 0),
+                          color: const Color.fromARGB(255, 255, 196, 0),
                           borderRadius: BorderRadius.circular(10),
                           child: InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignUpScreen()),
+                                    builder: (context) => const SignUpScreen()),
                               );
                             },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 20),
                               child: Center(
                                 child: Text(

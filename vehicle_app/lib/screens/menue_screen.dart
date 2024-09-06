@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vehicle_app/Services/camera_service.dart';
-import 'package:vehicle_app/Services/geolocation_Service.dart';
-import 'package:vehicle_app/Services/lightsensor_service.dart';
 import 'package:vehicle_app/controllers/theme_controller.dart';
 import 'package:vehicle_app/controllers/user_controller.dart';
 import 'package:vehicle_app/screens/ConnectivityStatusScreenState.dart';
@@ -11,11 +8,12 @@ import 'package:vehicle_app/screens/about_screen.dart';
 import 'package:vehicle_app/screens/login_screen.dart';
 import 'package:vehicle_app/screens/privacy_screen.dart';
 import 'package:vehicle_app/screens/profile_detail_page.dart';
-import 'package:vehicle_app/widgets/battery_status.dart';
 import 'package:vehicle_app/widgets/navbar_roots.dart';
 import 'package:vehicle_app/widgets/vehicle_list.dart';
 
 class MenueScreen extends StatefulWidget {
+  const MenueScreen({super.key});
+
   @override
   State<MenueScreen> createState() => _MenueScreenState();
 }
@@ -27,23 +25,25 @@ class _MenueScreenState extends State<MenueScreen> {
   void _logout() {
     // Clear user session data here, if any
     userController.setUserName('');
+    userController.setUserEmail('');
 
     // Show logout success message
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('Successfully logged out'),
       ),
     );
 
     // Navigate to the login screen and remove all previous routes after a short delay
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
         (Route<dynamic> route) => false,
       );
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,17 +59,17 @@ class _MenueScreenState extends State<MenueScreen> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => NavbarRoots()),
+                        MaterialPageRoute(builder: (context) => const NavbarRoots()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Menu',
                       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ListTile(
-                    leading: CircleAvatar(
+                    leading: const CircleAvatar(
                       radius: 30,
                       backgroundImage: AssetImage('images/person.jpeg'),
                     ),
@@ -78,18 +78,22 @@ class _MenueScreenState extends State<MenueScreen> {
                         userController.userName.value.isNotEmpty
                           ? userController.userName.value
                           : "Guest",
-                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
                       );
                     }),
-                    subtitle: Text(
-                      "Profile",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
+                    subtitle: Obx(() {
+                      return Text(
+                        userController.userEmail.value.isNotEmpty
+                          ? userController.userEmail.value
+                          : "No email",
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      );
+                    }),
                   ),
-                  Divider(height: 50),
+                  const Divider(height: 50),
                   Obx(() {
                     return SwitchListTile(
-                      title: Text(
+                      title: const Text(
                         'Dark Mode',
                         style: TextStyle(
                           fontSize: 20,
@@ -101,7 +105,7 @@ class _MenueScreenState extends State<MenueScreen> {
                             ? Icons.dark_mode
                             : Icons.light_mode,
                         size: 35,
-                        color: Color.fromARGB(255, 255, 196, 0),
+                        color: const Color.fromARGB(255, 255, 196, 0),
                       ),
                       value: themeController.isDarkMode.value,
                       onChanged: (value) {
@@ -109,75 +113,75 @@ class _MenueScreenState extends State<MenueScreen> {
                       },
                     );
                   }),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildMenuItem(
                     icon: CupertinoIcons.person,
                     text: "Profile",
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => ProfileDetailPage(),
+                        builder: (context) => const ProfileDetailPage(),
                       ));
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildMenuItem(
                     icon: Icons.signal_cellular_0_bar_sharp,
                     text: "Network",
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => ConnectivityStatusScreen() ,
+                        builder: (context) => const ConnectivityStatusScreen() ,
                       ));
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildMenuItem(
                     icon: Icons.car_rental_sharp,
                     text: "Vehicle List",
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => VehicleListPage() ,
+                        builder: (context) => const VehicleListPage() ,
                       ));
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildMenuItem(
                     icon: Icons.notifications_none_outlined,
                     text: "Notifications",
                     onTap: () {},
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildMenuItem(
                     icon: Icons.privacy_tip_outlined,
                     text: "Privacy",
                     onTap: () {
                        Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => PrivacyPage() ,
+                        builder: (context) => const PrivacyPage() ,
                       ));
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildMenuItem(
                     icon: Icons.settings_suggest_outlined,
                     text: "General",
                     onTap: () {},
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildMenuItem(
                     icon: Icons.info_outline_rounded,
                     text: "About Us",
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => AboutScreen() ,
+                        builder: (context) => const AboutScreen() ,
                       ));
                     },
                   ),
-                  Divider(height: 40),
+                  const Divider(height: 40),
                   buildMenuItem(
                     icon: Icons.logout,
                     text: "Log Out",
                     onTap: _logout,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -186,12 +190,13 @@ class _MenueScreenState extends State<MenueScreen> {
       ),
     );
   }
+
   Widget buildMenuItem({required IconData icon, required String text, required VoidCallback onTap}) {
     return ListTile(
       onTap: onTap,
       leading: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.all(10),
+        decoration: const BoxDecoration(
           color: Color.fromARGB(255, 255, 196, 0),
           shape: BoxShape.circle,
         ),
@@ -203,12 +208,13 @@ class _MenueScreenState extends State<MenueScreen> {
       ),
       title: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w600,
         ),
       ),
-      trailing: Icon(Icons.arrow_forward_ios_rounded),
+      trailing: const Icon(Icons.arrow_forward_ios_rounded),
     );
   }
 }
+

@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:vehicle_app/screens/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -25,8 +27,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     _controller.forward();
 
-    Timer(Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => WelcomeScreen()));
+    Timer(const Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const WelcomeScreen()));
     });
   }
 
@@ -39,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFD700), // Yellow color
+      backgroundColor: const Color(0xFFFFD700), // Yellow color
       body: Center(
         child: FadeTransition(
           opacity: _animation,
@@ -51,8 +53,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 width: 200,
                 height: 200,
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Welcome to M & N Service',
                 style: TextStyle(
                   fontSize: 24,

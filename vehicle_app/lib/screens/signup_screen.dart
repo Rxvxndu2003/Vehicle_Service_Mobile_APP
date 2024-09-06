@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:vehicle_app/screens/login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -81,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (response.headers['content-type']?.contains('application/json') ?? false) {
         if (response.statusCode == 201) {
           _showSnackBar('Registration successful');
-          Future.delayed(Duration(seconds: 2), () {
+          Future.delayed(const Duration(seconds: 2), () {
             Navigator.pushReplacementNamed(context, '/login');
           });
 
@@ -135,7 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: TextButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(
-            builder: (context) => LoginScreen(),
+            builder: (context) => const LoginScreen(),
           ));
         },
         child: Text(
@@ -213,12 +215,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: SizedBox(
         width: double.infinity,
         child: Material(
-          color: Color.fromARGB(255, 255, 196, 0),
+          color: const Color.fromARGB(255, 255, 196, 0),
           borderRadius: BorderRadius.circular(10),
           child: InkWell(
             onTap: _signUp,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: Center(
                 child: Text(
                   "Sign Up",
@@ -240,7 +242,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "Already have an account? ",
           style: TextStyle(
             fontSize: 18,
@@ -251,7 +253,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         TextButton(
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(
-              builder: (context) => LoginScreen(),
+              builder: (context) => const LoginScreen(),
             ));
           },
           child: Text(
@@ -276,7 +278,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     bool isEmpty = false,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -284,7 +286,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             controller: controller,
             decoration: InputDecoration(
               labelText: label,
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               prefixIcon: Icon(prefixIcon),
               errorText: isEmpty ? '$label is required' : null,
             ),
@@ -300,7 +302,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     bool isEmpty = false,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -309,8 +311,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             obscureText: passToggle,
             decoration: InputDecoration(
               labelText: label,
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.lock),
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.lock),
               errorText: isEmpty ? '$label is required' : null,
               suffixIcon: InkWell(
                 onTap: () {

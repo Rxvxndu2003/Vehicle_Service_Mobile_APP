@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:vehicle_app/models/profile_details.dart';
-import '../models/privacy_policy.dart';
 
 class ProfileService {
   final String url = 'https://rxvxndu2003.github.io/privacy/privacy.json'; // Replace with your jsonbin.io URL

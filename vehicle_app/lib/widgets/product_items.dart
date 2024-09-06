@@ -1,37 +1,52 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:vehicle_app/screens/ProductDetailScreen.dart';
 
 class Product {
   final int id;
   final String name;
-  final String description;
+  final double rating;
   final double price;
-  final String? image; // Made image nullable
+  final String? image;
 
   Product({
     required this.id,
     required this.name,
-    required this.description,
+    required this.rating,
     required this.price,
-    this.image, // Image can now be null
+    this.image,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'],
-      name: json['name'] ?? 'No Name', // Provide default value if null
-      description: json['description'] ?? 'No Description', // Provide default value if null
-      price: double.tryParse(json['price'].toString()) ?? 0.0, // Provide default value if null
-      // image: json['image'].startsWith('http')
-      //     ? json['image']
-      //     : 'https://4gbxsolutions.com/storage/${json['image']}',
+      name: json['name'] ?? 'No Name',
+      rating: json['rating'] is double
+          ? json['rating']
+          : double.tryParse(json['rating'].toString()) ?? 0.0,
+      price: double.tryParse(json['price'].toString()) ?? 0.0,
+      image: json['image'] != null && json['image'].startsWith('http')
+          ? json['image']
+          : 'https://4gbxsolutions.com/storage/${json['image']}',
     );
   }
 }
 
+class ProductItems extends StatelessWidget {
+  final String searchQuery;
+  final double minPrice;
+  final double maxPrice;
+  final double minRating;
 
-class ItemsWidget extends StatelessWidget {
+  const ProductItems({
+    super.key,
+    required this.searchQuery,
+    required this.minPrice,
+    required this.maxPrice,
+    required this.minRating,
+  });
+
   Future<List<Product>> fetchProducts() async {
     final response = await http.get(Uri.parse('https://4gbxsolutions.com/fetch-products'));
 
@@ -45,6 +60,7 @@ class ItemsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -53,33 +69,44 @@ class ItemsWidget extends StatelessWidget {
     double childAspectRatio;
 
     if (isLandscape) {
-      crossAxisCount = (screenWidth / 200).round();
+      crossAxisCount = (screenWidth / 250).round();
       childAspectRatio = (screenHeight / screenWidth) * 1.3;
     } else {
       crossAxisCount = (screenWidth / 180).round();
       childAspectRatio = (screenWidth / screenHeight) * 1.2;
     }
-
     return FutureBuilder<List<Product>>(
       future: fetchProducts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No products found'));
+          return const Center(child: Text('No products found'));
         } else {
-          final products = snapshot.data!;
-          return GridView.count(
-            crossAxisCount: crossAxisCount,
-            childAspectRatio: childAspectRatio,
+          final products = snapshot.data!
+              .where((product) => 
+                      product.name.toLowerCase().contains(searchQuery.toLowerCase()) &&
+                      product.price >= minPrice &&
+                      product.price <= maxPrice &&
+                      product.rating >= minRating) 
+              .toList();
+
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              childAspectRatio: childAspectRatio,
+              crossAxisSpacing: 15,
+              mainAxisSpacing: 15,
+            ),
+            itemCount: products.length,
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            children: products.map((product) {
-              return ProductItem(product: product);
-            }).toList(),
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            itemBuilder: (context, index) {
+              return ProductItem(product: products[index]);
+            },
           );
         }
       },
@@ -90,100 +117,116 @@ class ItemsWidget extends StatelessWidget {
 class ProductItem extends StatelessWidget {
   final Product product;
 
-  ProductItem({required this.product});
+  const ProductItem({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 10, right: 15, top: 10),
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 233, 234, 237),
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.black12,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  "-50%",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Icon(
-                Icons.favorite_border,
-                color: Colors.red,
-              ),
-            ],
-          ),
-          InkWell(
-            onTap: () {},
-            child: Container(
-              margin: EdgeInsets.all(10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => ProductDetailScreen(product: product),
+                    ));
+              },
               child: product.image != null
                   ? Image.network(
                       product.image!,
-                      width: 100,
-                      height: 100,
+                      width: double.infinity,
+                      height: 150,
+                      fit: BoxFit.cover,
                     )
-                  : Icon(Icons.broken_image, size: 100), // Placeholder if image is null
+                  : Container(
+                      height: 150,
+                      color: Colors.grey[300],
+                      child: const Icon(
+                        Icons.broken_image,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
+                    ),
             ),
-          ),
-          Container(
-            padding: EdgeInsets.only(bottom: 10),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              product.name,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+              child: Text(
+                product.name,
+                style: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              product.description,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: List.generate(5, (index) {
+                  return Icon(
+                    index < product.rating.round() ? Icons.star : Icons.star_border,
+                    color: Colors.amber,
+                    size: 16,
+                  );
+                }),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "\$${product.price}",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Rs.${product.price.toStringAsFixed(2)}",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                    ),
                   ),
-                ),
-                Icon(
-                  Icons.shopping_cart_checkout,
-                  color: Colors.black,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            // Add buttons here
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // "Buy Now" button
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailScreen(product: product),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.shop_sharp, color: Colors.white),
+                    label: const Text('Buy Now'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white, backgroundColor: Colors.orangeAccent, // Text and icon color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10), // Rounded corners
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

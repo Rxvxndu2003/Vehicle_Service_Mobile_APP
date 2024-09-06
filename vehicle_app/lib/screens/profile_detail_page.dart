@@ -7,6 +7,8 @@ import 'package:vehicle_app/controllers/user_controller.dart';
 import 'package:vehicle_app/models/profile_details.dart';
 
 class ProfileDetailPage extends StatefulWidget {
+  const ProfileDetailPage({super.key});
+
   @override
   _ProfileDetailPageState createState() => _ProfileDetailPageState();
 }
@@ -35,7 +37,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Profile Details',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
@@ -44,11 +46,11 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
         future: futureProfile,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
-            return Center(child: Text('No data found'));
+            return const Center(child: Text('No data found'));
           } else {
             final profile = snapshot.data!;
             return Padding(
@@ -56,21 +58,21 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 80,
                     backgroundImage: AssetImage('images/person.jpeg'), // Replace with your image asset
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(
                     userController.userName.value.isNotEmpty
                         ? userController.userName.value
                         : "Guest Name", // Default name if not logged in
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     userController.userEmail.value.isNotEmpty
                         ? userController.userEmail.value
@@ -80,55 +82,55 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                       color: Colors.grey[600],
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.person,
                       color: Color.fromARGB(255, 255, 196, 0),
                     ),
                     title: Text(
                       profile.customerId,
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
                   ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.phone,
                       color: Color.fromARGB(255, 255, 196, 0),
                     ),
                     title: Text(
                       profile.phoneNumber,
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
                   ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.location_on,
                       color: Color.fromARGB(255, 255, 196, 0),
                     ),
                     title: Text(
                       profile.address,
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
                   ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.car_repair_sharp,
                       color: Color.fromARGB(255, 255, 196, 0),
                     ),
                     title: Text(
                       profile.vehicleId,
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
                   ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       CupertinoIcons.car_fill,
                       color: Color.fromARGB(255, 255, 196, 0),
                     ),
                     title: Text(
                       profile.vehicleModel,
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
                   ElevatedButton.icon(
@@ -142,20 +144,20 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                       Icons.edit,
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.black
-                          : Color.fromARGB(255, 124, 123, 123),
+                          : const Color.fromARGB(255, 124, 123, 123),
                     ),
                     label: Text(
                       "Edit Profile",
                       style: TextStyle(
                         color: Theme.of(context).brightness == Brightness.dark
                             ? Colors.black
-                            : Color.fromARGB(255, 124, 123, 123),
+                            : const Color.fromARGB(255, 124, 123, 123),
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 255, 196, 0),
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                      textStyle: TextStyle(fontSize: 18),
+                      backgroundColor: const Color.fromARGB(255, 255, 196, 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      textStyle: const TextStyle(fontSize: 18),
                     ),
                   ),
                 ],

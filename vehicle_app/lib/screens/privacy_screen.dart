@@ -3,6 +3,8 @@ import '../models/privacy_policy.dart';
 import '../services/privacy_service.dart';
 
 class PrivacyPage extends StatefulWidget {
+  const PrivacyPage({super.key});
+
   @override
   _PrivacyPageState createState() => _PrivacyPageState();
 }
@@ -20,18 +22,20 @@ class _PrivacyPageState extends State<PrivacyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Privacy Policy'),
+        title: const Text('Privacy Policy'),
         titleTextStyle: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: Colors.black
+          color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
         ),
       ),
       body: FutureBuilder<PrivacyPolicy>(
         future: futurePrivacyPolicy,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
@@ -43,23 +47,23 @@ class _PrivacyPageState extends State<PrivacyPage> {
                 children: [
                   Text(
                     policy.title,
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 196, 0)),
+                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 196, 0)),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'Last Updated: ${policy.lastUpdated}',
-                    style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.grey),
+                    style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.grey),
                   ),
-                  Divider(height: 32, thickness: 2),
+                  const Divider(height: 32, thickness: 2),
                   Text(
                     policy.introduction,
-                    style: TextStyle(fontSize: 16, height: 1.5),
+                    style: const TextStyle(fontSize: 16, height: 1.5),
                   ),
-                  Divider(height: 32, thickness: 2),
+                  const Divider(height: 32, thickness: 2),
                   _buildSectionTitle('Data Collection'),
                   _buildSectionContent('Personal Information: ${policy.dataCollection.personalInformation.join(', ')}'),
                   _buildSectionContent('Usage Data: ${policy.dataCollection.usageData.join(', ')}'),
-                  Divider(height: 32, thickness: 2),
+                  const Divider(height: 32, thickness: 2),
                   _buildSectionTitle('Data Usage'),
                   ...policy.dataUsage.map((dataUsage) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -68,29 +72,29 @@ class _PrivacyPageState extends State<PrivacyPage> {
                           children: [
                             Text(
                               dataUsage.purpose,
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(
                               dataUsage.details,
-                              style: TextStyle(fontSize: 16, height: 1.5),
+                              style: const TextStyle(fontSize: 16, height: 1.5),
                             ),
                           ],
                         ),
                       )),
-                  Divider(height: 32, thickness: 2),
+                  const Divider(height: 32, thickness: 2),
                   _buildSectionTitle('Data Sharing'),
                   _buildSectionContent('Third Parties: ${policy.dataSharing.thirdParties.join(', ')}'),
                   _buildSectionContent('Purpose: ${policy.dataSharing.purpose}'),
-                  Divider(height: 32, thickness: 2),
+                  const Divider(height: 32, thickness: 2),
                   _buildSectionTitle('Data Security'),
                   _buildSectionContent(policy.dataSecurity.description),
-                  Divider(height: 32, thickness: 2),
+                  const Divider(height: 32, thickness: 2),
                   _buildSectionTitle('Your Rights'),
                   ...policy.yourRights.map((right) => Text(
                         '- $right',
-                        style: TextStyle(fontSize: 16, height: 1.5),
+                        style: const TextStyle(fontSize: 16, height: 1.5),
                       )),
-                  Divider(height: 32, thickness: 2),
+                  const Divider(height: 32, thickness: 2),
                   _buildSectionTitle('Contact Information'),
                   _buildSectionContent('Company: ${policy.contactInformation.companyName}'),
                   _buildSectionContent('Address: ${policy.contactInformation.address}'),
@@ -100,7 +104,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
               ),
             );
           } else {
-            return Center(child: Text('No data available'));
+            return const Center(child: Text('No data available'));
           }
         },
       ),
@@ -110,7 +114,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 196, 0)),
+      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 196, 0)),
     );
   }
 
@@ -119,7 +123,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
         content,
-        style: TextStyle(fontSize: 16, height: 1.5),
+        style: const TextStyle(fontSize: 16, height: 1.5),
       ),
     );
   }

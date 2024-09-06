@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vehicle_app/screens/add_vehicle.dart';
 import 'package:vehicle_app/screens/book_now.dart';
 
 class PendingVehicles extends StatelessWidget {
@@ -8,23 +7,23 @@ class PendingVehicles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
-          Text(
+          const Text(
             "About Vehicle",
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Container(
-            padding: EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 5),
             decoration: BoxDecoration(
-              color: Color(0xFFF4F6FA),
+              color: const Color(0xFFF4F6FA),
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 4,
@@ -54,12 +53,12 @@ class PendingVehicles extends StatelessWidget {
                           : Colors.black,
                       ),
                     ),
-                    trailing: CircleAvatar(
+                    trailing: const CircleAvatar(
                       radius: 25,
                       backgroundImage: AssetImage("images/Aqua.jpeg"),
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     child: Divider(
                       thickness: 1,
@@ -69,7 +68,7 @@ class PendingVehicles extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                    Row(
+                    const Row(
                       children: [
                       Icon(
                         Icons.calendar_month,
@@ -84,7 +83,7 @@ class PendingVehicles extends StatelessWidget {
                       ),
                       ],
                     ),
-                     Row(
+                     const Row(
                       children: [
                       Icon(
                         Icons.location_city_sharp,
@@ -102,14 +101,14 @@ class PendingVehicles extends StatelessWidget {
                      Row(
                       children: [
                         Container(
-                           padding: EdgeInsets.all(5),
-                           decoration: BoxDecoration(
+                           padding: const EdgeInsets.all(5),
+                           decoration: const BoxDecoration(
                             color: Colors.yellow,
                             shape: BoxShape.circle,
                            ),
                         ),
-                        SizedBox(width: 5),
-                        Text(
+                        const SizedBox(width: 5),
+                        const Text(
                           "Pending",
                           style: TextStyle(
                             color: Colors.black54,
@@ -119,7 +118,7 @@ class PendingVehicles extends StatelessWidget {
                      ),
                     ],
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -129,12 +128,12 @@ class PendingVehicles extends StatelessWidget {
                         },
                         child: Container(
                           width: 150,
-                          padding: EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 158, 160, 163),
+                            color: const Color.fromARGB(255, 158, 160, 163),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               "Delete",
                               style: TextStyle(
@@ -149,17 +148,17 @@ class PendingVehicles extends StatelessWidget {
                       InkWell(
                         onTap: () {
                            Navigator.push(context, MaterialPageRoute(
-                               builder: (context) => BookNow()
+                               builder: (context) => const BookNow()
                           ));
                         },
                         child: Container(
                           width: 150,
-                          padding: EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 255, 196, 0),
+                            color: const Color.fromARGB(255, 255, 196, 0),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               "Edit",
                               style: TextStyle(
@@ -173,12 +172,12 @@ class PendingVehicles extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                 ],
               ), 
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
         ],
       ),
     );

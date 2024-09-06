@@ -1,4 +1,6 @@
 {
     "avdmanager.sdkManager": "/Applications/development/flutter/packages/flutter_tools/lib/src/android/android_sdk.dart",
-    "avdmanager.emulator": "/Applications/development/flutter/packages/flutter_tools/lib/src/android/android_emulator.dart"
+    "avdmanager.emulator": "/Applications/development/flutter/packages/flutter_tools/lib/src/android/android_emulator.dart",
+    "pieces.cloudCapabilities": "Blended",
+    "pieces.telemetry": true
 }

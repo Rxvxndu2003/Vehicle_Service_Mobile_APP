@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:vehicle_app/widgets/engine_service.dart';
-import 'package:vehicle_app/widgets/navbar_roots.dart';
 import 'package:vehicle_app/widgets/tyre_service.dart';
 import 'package:vehicle_app/widgets/vehicle_service.dart';
 
 
 class ServiceScreen extends StatefulWidget {
+  const ServiceScreen({super.key});
+
   // const ScheduleScreen({super.key});
 
   @override
@@ -17,13 +18,13 @@ class _ServiceScreenState extends State<ServiceScreen> {
 
   final _scheduleWidgets = [
     //Upcoming Widget
-    VehicleService(),
+    const VehicleService(),
 
     // Completed Widget
-    EngineService(),
+    const EngineService(),
 
     //Canceled Widget
-    TyreService(),
+    const TyreService(),
  
   ];
   @override
@@ -31,11 +32,11 @@ class _ServiceScreenState extends State<ServiceScreen> {
     return Material(
       // color: Colors.white,
       child: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 40),
+        padding: const EdgeInsets.only(top: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Padding(
+             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: Text(
                 "Services",
@@ -45,12 +46,12 @@ class _ServiceScreenState extends State<ServiceScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              padding: EdgeInsets.all(5),
-              margin: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.all(5),
+              margin: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 233, 234, 237),
+                color: const Color.fromARGB(255, 233, 234, 237),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -63,9 +64,9 @@ class _ServiceScreenState extends State<ServiceScreen> {
                        });
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                       decoration: BoxDecoration(
-                        color: _buttonIndex == 0 ? Color.fromARGB(255, 255, 196, 0) : Colors.transparent,
+                        color: _buttonIndex == 0 ? const Color.fromARGB(255, 255, 196, 0) : Colors.transparent,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
@@ -85,9 +86,9 @@ class _ServiceScreenState extends State<ServiceScreen> {
                        });
                      },
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                       decoration: BoxDecoration(
-                        color: _buttonIndex == 1 ? Color.fromARGB(255, 255, 196, 0) : Colors.transparent, 
+                        color: _buttonIndex == 1 ? const Color.fromARGB(255, 255, 196, 0) : Colors.transparent, 
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
@@ -107,9 +108,9 @@ class _ServiceScreenState extends State<ServiceScreen> {
                        });
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                       decoration: BoxDecoration(
-                        color: _buttonIndex == 2 ? Color.fromARGB(255, 255, 196, 0) : Colors.transparent,
+                        color: _buttonIndex == 2 ? const Color.fromARGB(255, 255, 196, 0) : Colors.transparent,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
@@ -125,7 +126,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             _scheduleWidgets[_buttonIndex],
           ],
         ),

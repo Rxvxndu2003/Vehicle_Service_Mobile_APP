@@ -10,26 +10,30 @@ Future<List<Vehicle>> loadVehicles() async {
 }
 
 class VehicleListPage extends StatelessWidget {
+  const VehicleListPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Vehicles'),
+        title: const Text('Vehicles'),
         titleTextStyle: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: Colors.black
+          color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
         ),
       ),
       body: FutureBuilder<List<Vehicle>>(
         future: loadVehicles(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No data found'));
+            return const Center(child: Text('No data found'));
           } else {
             final vehicles = snapshot.data!;
             return ListView.builder(
@@ -44,27 +48,27 @@ class VehicleListPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ListTile(
-                      contentPadding: EdgeInsets.all(10),
+                      contentPadding: const EdgeInsets.all(10),
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
                         child: Image.asset(vehicle.image, width: 100, height: 150, fit: BoxFit.cover),
                       ),
                       title: Text(
                         vehicle.name,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
                             vehicle.type,
-                            style: TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 16),
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
                             vehicle.number,
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                            style: const TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                         ],
                       ),
