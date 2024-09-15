@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vehicle_app/Services/about_service.dart';
 import 'package:vehicle_app/models/about.dart';
+import 'package:vehicle_app/widgets/navbar_roots.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -20,9 +21,53 @@ class _AboutScreenState extends State<AboutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('About Us'),
+        elevation: 0,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_sharp,
+          size: 28, 
+          color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                            ),
+          onPressed: () {
+           Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NavbarRoots(initialIndex: 4,),
+              ),
+            );
+          },
+        ),
+        title:  Text(
+        'About Us',
+        style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications_outlined,
+              size: 28, // Size of the notification icon
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              // Handle notification icon press
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<AboutData>(
         future: futureAboutData,

@@ -107,14 +107,16 @@ class _AddVehicleState extends State<AddVehicle> {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_sharp,
-            size: 32, // Slightly reduced size for a more modern look
+            size: 20, // Slightly reduced size for a more modern look
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white
                 : Colors.black,
@@ -129,7 +131,7 @@ class _AddVehicleState extends State<AddVehicle> {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.notifications,
+              Icons.notifications_outlined,
               size: 28, // Size of the notification icon
               color: Theme.of(context).brightness == Brightness.dark
                   ? Colors.white
@@ -149,7 +151,7 @@ class _AddVehicleState extends State<AddVehicle> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  "Add Your Vehicle !!!",
+                  "Add Your Vehicle Now!!!",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,

@@ -1,4 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:vehicle_app/screens/CartSummary_Screen.dart';
+import 'dart:convert';
+import 'package:vehicle_app/screens/products_screen.dart';
+import 'package:vehicle_app/widgets/items_widget.dart';
 import 'package:vehicle_app/widgets/navbar_roots.dart';
 import 'package:vehicle_app/widgets/product_items.dart';
 
@@ -28,30 +35,73 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
   }
 
+  Future<String?> getAuthToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  Future<void> addToCart(int productId) async {
+    final token = await getAuthToken(); 
+    final url = Uri.parse('https://4gbxsolutions.com/api/cart/add'); // Replace with your backend URL
+
+    // Make the POST request
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token', // Add token in headers for authentication
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'id': productId, // Pass the product ID to the request
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Handle success response
+      final jsonResponse = jsonDecode(response.body);
+      print('Success: ${jsonResponse['message']}');
+    } else {
+      // Handle error response
+      print('Failed to add to cart');
+      print('Error: ${response.body}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_sharp,
-          size: 32, 
-          color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                            ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => const NavbarRoots(),
-                    ));
-          },
-        ),
-        title: Text(
-          widget.product.name,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications_outlined,
+            color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              // Add functionality for notifications
+            },
+          ),
+          IconButton(
+            icon: Icon(CupertinoIcons.bag_fill,
+            color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CartSummaryPage(),
+                        ),
+                      );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView( // Added SingleChildScrollView here
         padding: const EdgeInsets.all(16.0),
@@ -59,22 +109,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: widget.product.image != null
-                  ? Image.network(
-                      widget.product.image!,
-                      height: 250,
-                      fit: BoxFit.cover,
-                    )
-                  : Container(
-                      height: 250,
-                      color: Colors.grey[300],
-                      child: const Icon(
-                        Icons.broken_image,
-                        size: 100,
-                        color: Colors.grey,
-                      ),
-                    ),
-            ),
+               child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20), // Set the desired border radius
+                  child: widget.product.image != null
+                        ? Image.network(
+                          widget.product.image!,
+                          height: 250,
+                          width: double.infinity, // Ensure it takes full width
+                          fit: BoxFit.cover,
+                        )
+                        : Container(
+                          height: 250,
+                          width: double.infinity, // Ensure it takes full width
+                          color: Colors.grey[300],
+                          child: const Icon(
+                              Icons.broken_image,
+                              size: 100,
+                              color: Colors.grey,
+                          ),
+                        ),
+                 ),
+              ),
             const SizedBox(height: 20),
             Text(
               widget.product.name,
@@ -134,7 +189,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle add to cart functionality
+                    addToCart(widget.product.id);// Handle add to cart functionality
                   },
                   child: Text('Add to Cart',
                   style: TextStyle(

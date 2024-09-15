@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:vehicle_app/screens/login_screen.dart';
 
@@ -36,71 +38,86 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _signUp() async {
-    await _getCsrfToken();
+  await _getCsrfToken();
 
-    final name = _nameController.text;
-    final email = _emailController.text;
-    final phone = _phoneController.text;
-    final address = _addressController.text;
-    final dob = _dobController.text;
-    final password = _passwordController.text;
-    final confirmPassword = _confirmPasswordController.text;
+  final name = _nameController.text;
+  final email = _emailController.text;
+  final phone = _phoneController.text;
+  final address = _addressController.text;
+  final dob = _dobController.text;
+  final password = _passwordController.text;
+  final confirmPassword = _confirmPasswordController.text;
 
-    setState(() {
-      _isNameEmpty = name.isEmpty;
-      _isEmailEmpty = email.isEmpty;
-      _isPhoneEmpty = phone.isEmpty;
-      _isAddressEmpty = address.isEmpty;
-      _isDobEmpty = dob.isEmpty;
-      _isPasswordEmpty = password.isEmpty;
-      _isConfirmPasswordEmpty = confirmPassword.isEmpty;
-    });
+  setState(() {
+    _isNameEmpty = name.isEmpty;
+    _isEmailEmpty = email.isEmpty;
+    _isPhoneEmpty = phone.isEmpty;
+    _isAddressEmpty = address.isEmpty;
+    _isDobEmpty = dob.isEmpty;
+    _isPasswordEmpty = password.isEmpty;
+    _isConfirmPasswordEmpty = confirmPassword.isEmpty;
+  });
 
-    if (_isNameEmpty || _isEmailEmpty || _isPhoneEmpty || _isAddressEmpty || _isDobEmpty || _isPasswordEmpty || _isConfirmPasswordEmpty) {
-      return;
-    }
-
-    if (password != confirmPassword) {
-      _showSnackBar('Passwords do not match');
-      return;
-    }
-
-    try {
-      final response = await http.post(
-        Uri.parse('https://4gbxsolutions.com/api/auth/register'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'name': name,
-          'email': email,
-          'phone': phone,
-          'address': address,
-          'dob': dob,
-          'password': password,
-          'password_confirmation': confirmPassword,
-        }),
-      );
-
-      if (response.headers['content-type']?.contains('application/json') ?? false) {
-        if (response.statusCode == 201) {
-          _showSnackBar('Registration successful');
-          Future.delayed(const Duration(seconds: 2), () {
-            Navigator.pushReplacementNamed(context, '/login');
-          });
-
-        } else {
-          final Map<String, dynamic> responseData = jsonDecode(response.body);
-          setState(() {
-            _errorMessage = responseData['message'] ?? 'Registration failed';
-          });
-          _showSnackBar(_errorMessage!);
-        }
-      } else {
-        _showSnackBar('Unexpected server response');
-      }
-    } catch (e) {
-      _showSnackBar('An error occurred: $e');
-    }
+  if (_isNameEmpty || _isEmailEmpty || _isPhoneEmpty || _isAddressEmpty || _isDobEmpty || _isPasswordEmpty || _isConfirmPasswordEmpty) {
+    return;
   }
+
+  if (password != confirmPassword) {
+    _showSnackBar('Passwords do not match');
+    return;
+  }
+
+  try {
+    final response = await http.post(
+      Uri.parse('https://4gbxsolutions.com/api/auth/register'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'address': address,
+        'dob': dob,
+        'password': password,
+        'password_confirmation': confirmPassword,
+      }),
+    );
+
+    if (response.headers['content-type']?.contains('application/json') ?? false) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 201) {
+        _showSnackBar('User Created Successfully');
+        
+        // Clear form fields after successful registration
+        _nameController.clear();
+        _emailController.clear();
+        _phoneController.clear();
+        _addressController.clear();
+        _dobController.clear();
+        _passwordController.clear();
+        _confirmPasswordController.clear();
+
+        // Refresh the page by resetting the form (setState)
+        setState(() {});
+
+        // Navigate to the login screen after a short delay
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pushReplacementNamed(context, '/login');
+        });
+      } else {
+        setState(() {
+          _errorMessage = responseData['message'] ?? 'Registration failed';
+        });
+        _showSnackBar(_errorMessage!);
+      }
+    } else {
+      _showSnackBar('Unexpected server response');
+    }
+  } catch (e) {
+    _showSnackBar('An error occurred: $e');
+  }
+}
+
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -146,7 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white
                 : Colors.black,
-            fontSize: 20,
+            fontSize: 16,
           ),
         ),
       ),
@@ -211,7 +228,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildSignUpButton() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: SizedBox(
         width: double.infinity,
         child: Material(
@@ -220,12 +237,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: InkWell(
             onTap: _signUp,
             child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: Center(
                 child: Text(
                   "Sign Up",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
@@ -275,6 +292,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     required TextEditingController controller,
     required String label,
     required IconData prefixIcon,
+    double borderRadius = 15.0,
     bool isEmpty = false,
   }) {
     return Padding(
@@ -286,7 +304,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             controller: controller,
             decoration: InputDecoration(
               labelText: label,
-              border: const OutlineInputBorder(),
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
               prefixIcon: Icon(prefixIcon),
               errorText: isEmpty ? '$label is required' : null,
             ),
@@ -311,7 +331,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             obscureText: passToggle,
             decoration: InputDecoration(
               labelText: label,
-              border: const OutlineInputBorder(),
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
               prefixIcon: const Icon(Icons.lock),
               errorText: isEmpty ? '$label is required' : null,
               suffixIcon: InkWell(

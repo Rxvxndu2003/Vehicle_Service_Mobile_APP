@@ -2,36 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:vehicle_app/screens/ProductDetailScreen.dart';
+import 'package:vehicle_app/widgets/items_widget.dart';
 
-class Product {
-  final int id;
-  final String name;
-  final double rating;
-  final double price;
-  final String? image;
 
-  Product({
-    required this.id,
-    required this.name,
-    required this.rating,
-    required this.price,
-    this.image,
-  });
-
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      id: json['id'],
-      name: json['name'] ?? 'No Name',
-      rating: json['rating'] is double
-          ? json['rating']
-          : double.tryParse(json['rating'].toString()) ?? 0.0,
-      price: double.tryParse(json['price'].toString()) ?? 0.0,
-      image: json['image'] != null && json['image'].startsWith('http')
-          ? json['image']
-          : 'https://4gbxsolutions.com/storage/${json['image']}',
-    );
-  }
-}
 
 class ProductItems extends StatelessWidget {
   final String searchQuery;
@@ -133,9 +106,9 @@ class ProductItem extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => ProductDetailScreen(product: product),
-                    ));
+                // Navigator.push(context, MaterialPageRoute(
+                //       builder: (context) => ProductDetailScreen(product: product),
+                //     ));
               },
               child: product.image != null
                   ? Image.network(
@@ -206,12 +179,12 @@ class ProductItem extends StatelessWidget {
                   // "Buy Now" button
                   ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductDetailScreen(product: product),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => ProductDetailScreen(product: product),
+                      //   ),
+                      // );
                     },
                     icon: const Icon(Icons.shop_sharp, color: Colors.white),
                     label: const Text('Buy Now'),

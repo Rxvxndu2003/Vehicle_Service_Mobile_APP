@@ -34,7 +34,7 @@ class WelcomeScreen extends StatelessWidget {
                           color: Theme.of(context).brightness == Brightness.dark
                               ? Colors.white
                               : Colors.black,
-                          fontSize: 20,
+                          fontSize: 18,
                         ),
                       ),
                     ),

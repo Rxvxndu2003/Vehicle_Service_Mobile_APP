@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vehicle_app/controllers/theme_controller.dart';
 import 'package:vehicle_app/controllers/user_controller.dart';
+import 'package:vehicle_app/screens/Onboarding_screen.dart';
+import 'package:vehicle_app/screens/Onboarding_screen2.dart';
+import 'package:vehicle_app/screens/Preferences_screen.dart';
 import 'package:vehicle_app/screens/add_vehicle.dart';
 import 'package:vehicle_app/screens/book_now.dart';
+import 'package:vehicle_app/screens/contactUs_screen.dart';
+import 'package:vehicle_app/screens/dark_screen.dart';
+import 'package:vehicle_app/screens/home_screen.dart';
 import 'package:vehicle_app/screens/login_screen.dart';
+import 'package:vehicle_app/screens/menue_screen.dart';
 import 'package:vehicle_app/screens/schedule_screen.dart';
 import 'package:vehicle_app/screens/service_screen.dart';
 import 'package:vehicle_app/screens/signup_screen.dart';
@@ -34,7 +41,7 @@ class MyApp extends StatelessWidget {
         theme: lightMode,
         darkTheme: darkMode,
         themeMode: themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
-        home: const SplashScreen(),
+        home: const  SplashScreen(),
         getPages: [
           // Define your routes here
           GetPage(name: '/', page: () => const SplashScreen()),
@@ -44,7 +51,7 @@ class MyApp extends StatelessWidget {
           GetPage(name: '/addVehicle', page: () => const AddVehicle()),
           GetPage(name: '/bookNow', page: () => const BookNow()),
           GetPage(name: '/schedule', page: () => const ScheduleScreen()),
-          GetPage(name: '/service', page: () => const ServiceScreen()),
+          GetPage(name: '/service', page: () => const ServicesPage()),
           GetPage(name: '/welcome', page: () => const WelcomeScreen()),
         ],
       );

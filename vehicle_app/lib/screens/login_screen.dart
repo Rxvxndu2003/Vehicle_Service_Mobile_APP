@@ -32,76 +32,86 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
+  final email = _emailController.text.trim();
+  final password = _passwordController.text.trim();
 
-    setState(() {
-      _isEmailEmpty = email.isEmpty;
-      _isPasswordEmpty = password.isEmpty;
-    });
+  setState(() {
+    _isEmailEmpty = email.isEmpty;
+    _isPasswordEmpty = password.isEmpty;
+  });
 
-    if (_isEmailEmpty || _isPasswordEmpty) {
-      return; // Stop if email or password is empty
-    }
+  if (_isEmailEmpty || _isPasswordEmpty) {
+    return; // Stop if email or password is empty
+  }
 
-    try {
-      await _getCsrfToken(); // Ensure CSRF token is fetched if required by backend
+  try {
+    await _getCsrfToken(); // Ensure CSRF token is fetched if required by backend
 
-      final response = await http.post(
-        Uri.parse('https://4gbxsolutions.com/api/auth/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email, 'password': password}),
-      );
+    final response = await http.post(
+      Uri.parse('https://4gbxsolutions.com/api/auth/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'password': password}),
+    );
 
-      final responseBody = jsonDecode(response.body);
-      print('API Response: $responseBody');
+    final responseBody = jsonDecode(response.body);
+    print('API Response: $responseBody'); // Print the entire response
 
-      if (response.statusCode == 200 && responseBody['status'] == true) {
-        final token = responseBody['token'];
+    if (response.statusCode == 200 && responseBody['status'] == true) {
+      final token = responseBody['token'];
+      
+      // Check if the 'user' field exists and is not null
+      final userName = responseBody.containsKey('user') && responseBody['user'] != null 
+          ? responseBody['user']['name'] 
+          : 'Guest'; // Default to 'Guest' if name is missing
 
-        if (token == null || token.isEmpty) {
-          setState(() {
-            _errorMessage = 'Failed to retrieve token.';
-          });
-          return;
-        }
-
-        // Save the token
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', token);
-
-        // Update the UserController with the user's email
-        userController.setUserEmail(email);
-
-        // Optional: Log the token to verify
-        print('Saved Token: $token');
-
-        // Navigate to HomeScreen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const NavbarRoots()),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login successful')),
-        );
-      } else {
+      if (token == null || token.isEmpty) {
         setState(() {
-          _errorMessage = responseBody['message'] ?? 'Login failed';
+          _errorMessage = 'Failed to retrieve token.';
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(_errorMessage!)),
-        );
+        return;
       }
-    } catch (e) {
-      print('Login Error: $e');
+
+      // Save the token and user name
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', token);
+      await prefs.setString('user_name', userName); // Save the user's name
+
+      // Update the UserController with the user's email and name
+      userController.setUserEmail(email);
+      userController.setUserName(userName); // Set the user name in the controller
+
+      // Optional: Log the token and user name to verify
+      print('Saved Token: $token');
+      print('Saved User Name: $userName');
+
+      // Navigate to HomeScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const NavbarRoots()),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login successful')),
+      );
+    } else {
       setState(() {
-        _errorMessage = 'An error occurred. Please try again.';
+        _errorMessage = responseBody['message'] ?? 'Login failed';
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(_errorMessage!)),
       );
     }
+  } catch (e) {
+    print('Login Error: $e');
+    setState(() {
+      _errorMessage = 'An error occurred. Please try again.';
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(_errorMessage!)),
+    );
   }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.white
                           : Colors.black,
-                      fontSize: 20,
+                      fontSize: 16,
                     ),
                   ),
                 ),
@@ -152,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       label: const Text("Enter Email"),
                       prefixIcon: const Icon(Icons.person),
@@ -168,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: passToggle,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       label: const Text("Enter Password"),
                       prefixIcon: const Icon(Icons.lock),
@@ -204,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text(
                               "Log In",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -222,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Text(
                       "Don't have an account? ",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
                       ),
@@ -236,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         "Create Account",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).brightness == Brightness.dark
                               ? Colors.white

@@ -16,34 +16,39 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   
   Widget build(BuildContext context) {
-    return Scaffold( // Modern background color
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    return Scaffold(
+      backgroundColor: backgroundColor, // Modern background color
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_sharp,
-          size: 32, 
-          color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                            ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => const NavbarRoots(),
-                    ));
-          },
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        automaticallyImplyLeading: false,
+        title: Image.asset(
+          'images/wordlogo.png',
+           height: 130,
+           fit: BoxFit.contain,
         ),
-        title: Text(
-          "Schedule",
-          style: TextStyle(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search,
             color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              // Add functionality for the search button here
+            },
           ),
-        ),
-        centerTitle: true,
+          IconButton(
+            icon: Icon(Icons.notifications_outlined,
+            color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              // Add functionality for notifications
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView( // This makes the body scrollable
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

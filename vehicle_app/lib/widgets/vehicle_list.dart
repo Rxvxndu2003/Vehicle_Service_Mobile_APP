@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:vehicle_app/widgets/navbar_roots.dart';
 import '../models/vehicle.dart';
 
 Future<List<Vehicle>> loadVehicles() async {
@@ -14,17 +15,51 @@ class VehicleListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+   final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    return Scaffold (
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Vehicles'),
-        titleTextStyle: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_sharp,
+          size: 28, 
           color: Theme.of(context).brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black,
+                            ),
+          onPressed: () {
+           Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NavbarRoots(initialIndex: 4,),
+              ),
+            );
+          },
         ),
-      ),
+        title: Text('Vehicle List',
+         style: TextStyle(
+          fontSize: 24,
+          color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+         ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications_outlined,
+              size: 28, // Size of the notification icon
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              // Handle notification icon press
+            },
+          ),
+        ],
+      ), 
       body: FutureBuilder<List<Vehicle>>(
         future: loadVehicles(),
         builder: (context, snapshot) {

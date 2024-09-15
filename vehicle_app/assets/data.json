@@ -1,30 +1,14 @@
 [
   {
-    "id": 1,
-    "name": "BMW M6",
-    "type": "Car",
-    "number": "CBB-2345",
-    "image": "images/bmw.jpg"
+    "question": "What services do you offer?",
+    "answer": "We offer a wide range of services including general maintenance, oil changes, brake repairs, engine diagnostics, tire services, and more."
   },
   {
-    "id": 2,
-    "name": "Benz AMG",
-    "type": "Car",
-    "number": "CAI-7892",
-    "image": "images/benz.jpg"
+    "question": "Do I need to book an appointment for service?",
+    "answer": "Yes, it is recommended to book an appointment to ensure that our team is available to service your vehicle at your convenience."
   },
   {
-    "id": 3,
-    "name": "Aston Martin",
-    "type": "Car",
-    "number": "CBI-5678",
-    "image": "images/aston.jpg"
-  },
-  {
-    "id": 4,
-    "name": "Toyota Sahara V8",
-    "type": "Car",
-    "number": "CBC-5688",
-    "image": "images/v8.jpg"
+    "question": "How long does a typical service take?",
+    "answer": "The duration depends on the type of service. Routine services like oil changes take about 30-45 minutes, while more complex services can take several hours."
   }
 ]

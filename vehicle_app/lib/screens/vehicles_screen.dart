@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vehicle_app/screens/add_vehicle.dart';
+import 'package:vehicle_app/screens/menue_screen.dart';
 import 'package:vehicle_app/widgets/navbar_roots.dart';
 import 'package:vehicle_app/widgets/vehicles_widget.dart';
 
@@ -13,21 +14,26 @@ class VehiclesScreen extends StatefulWidget {
 class _VehiclesScreenState extends State<VehiclesScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold( // Modern background color
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    return Scaffold( 
+      backgroundColor: backgroundColor,// Modern background color
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_sharp,
-          size: 32, 
+          size: 28, 
           color: Theme.of(context).brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black,
                             ),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => const NavbarRoots(),
-                    ));
+           Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NavbarRoots(initialIndex: 4,),
+              ),
+            );
           },
         ),
         title: Text(
@@ -41,6 +47,20 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications_outlined,
+              size: 28, // Size of the notification icon
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              // Handle notification icon press
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView( // This makes the body scrollable
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

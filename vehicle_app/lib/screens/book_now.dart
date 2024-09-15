@@ -212,14 +212,16 @@ class _BookNowState extends State<BookNow> {
   bool passToggle = true;
   @override
     Widget build(BuildContext context) {
+      final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
       return Scaffold(
+        backgroundColor: backgroundColor,
         appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_sharp,
-            size: 32, // Slightly reduced size for a more modern look
+            size: 20, // Slightly reduced size for a more modern look
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white
                 : Colors.black,
@@ -234,7 +236,7 @@ class _BookNowState extends State<BookNow> {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.notifications,
+              Icons.notifications_outlined,
               size: 28, // Size of the notification icon
               color: Theme.of(context).brightness == Brightness.dark
                   ? Colors.white
@@ -254,7 +256,7 @@ class _BookNowState extends State<BookNow> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  "Book Your Date !!!",
+                  "Book Your Date Now !!!",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
@@ -287,7 +289,7 @@ class _BookNowState extends State<BookNow> {
                    ),
                    prefixIcon: const Icon(CupertinoIcons.car_fill),// Light grey background
                    ),
-                  dropdownColor: Colors.white, // Dropdown background color
+                  dropdownColor: Theme.of(context).appBarTheme.backgroundColor, // Dropdown background color
                   style: TextStyle(color: Colors.black, fontSize: 16), // Text style inside dropdown
                   items: [
                       DropdownMenuItem(
@@ -297,7 +299,13 @@ class _BookNowState extends State<BookNow> {
                   ...serviceCenters.map((ServiceCenter center) {
                       return DropdownMenuItem<String>(
                           value: center.id.toString(),
-                          child: Text(center.service_center),
+                          child: Text(center.service_center,
+                          style: TextStyle(
+                            color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                          ),
+                          ),
                       );
                     }).toList(),
                   ],
@@ -318,17 +326,25 @@ class _BookNowState extends State<BookNow> {
                    ),
                    prefixIcon: const Icon(Icons.car_repair_sharp),// Light grey background
                    ),
-                   dropdownColor: Colors.white, // Dropdown background color
+                   dropdownColor: Theme.of(context).appBarTheme.backgroundColor,// Dropdown background color
                    style: TextStyle(color: Colors.black, fontSize: 16), // Text style inside dropdown
                    items: [
                    DropdownMenuItem(
                       value: "None",
-                      child: Text("Service", style: TextStyle(color: Colors.grey)),
+                      child: Text("Service", style: TextStyle(
+                        color: Colors.grey
+                    )),
                    ),
                    ...services.map((Service service) {
                    return DropdownMenuItem<String>(
                        value: service.id.toString(),
-                       child: Text(service.service_name),
+                       child: Text(service.service_name,
+                       style: TextStyle(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                       ),
+                       ),
                    );
                    }).toList(),
                    ],

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:vehicle_app/screens/menue_screen.dart';
+import 'package:vehicle_app/widgets/navbar_roots.dart';
 
 class ConnectivityStatusScreen extends StatefulWidget {
   const ConnectivityStatusScreen({super.key});
@@ -50,44 +51,59 @@ class _ConnectivityStatusScreenState extends State<ConnectivityStatusScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
     return Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_sharp,
+          size: 28, 
+          color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                            ),
+          onPressed: () {
+           Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NavbarRoots(initialIndex: 4,),
+              ),
+            );
+          },
+        ),
+        title: Text(
+          "Network Connectivity",
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications_outlined,
+              size: 28, // Size of the notification icon
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              // Handle notification icon press
+            },
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(top: 55),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MenueScreen()),
-                      );
-                    },
-                    child: const Icon(
-                      Icons.arrow_back,
-                      size: 30,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: Text(
-                      "Network Connectivity Status",
-                      style: TextStyle(
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             const SizedBox(height: 70),
             Center(
               child: Container(

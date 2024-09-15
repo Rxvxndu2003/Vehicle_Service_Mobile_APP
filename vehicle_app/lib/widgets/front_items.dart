@@ -3,49 +3,28 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:vehicle_app/screens/ProductDetailScreen.dart';
+import 'package:vehicle_app/screens/products_screen.dart';
+import 'package:vehicle_app/widgets/items_widget.dart';
 
-class Product {
-  final int id;
-  final String name;
-  final double rating;
-  final double price;
-  final String? image;
 
-  Product({
-    required this.id,
-    required this.name,
-    required this.rating,
-    required this.price,
-    this.image,
-  });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      id: json['id'],
-      name: json['name'] ?? 'No Name',
-      rating: json['rating'] is double
-          ? json['rating']
-          : double.tryParse(json['rating'].toString()) ?? 0.0,
-      price: double.tryParse(json['price'].toString()) ?? 0.0,
-      image: json['image'] != null && json['image'].startsWith('http')
-          ? json['image']
-          : 'https://4gbxsolutions.com/storage/${json['image']}',
-    );
-  }
-}
-
-class ItemsWidget extends StatelessWidget {
-  const ItemsWidget({super.key, required String searchQuery, required double minPrice, required double maxPrice, required double minRating});
+class FrontItems extends StatelessWidget {
+  const FrontItems({super.key, required String searchQuery, required double minPrice, required double maxPrice, required double minRating});
 
   Future<List<Product>> fetchProducts() async {
     final response = await http.get(Uri.parse('https://4gbxsolutions.com/fetch-products'));
 
     if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((product) => Product.fromJson(product)).toList();
-    } else {
-      throw Exception('Failed to load products');
-    }
+  List jsonResponse = json.decode(response.body);
+  
+  // Limit the response to only the first 5 products
+  List limitedProducts = jsonResponse.take(5).toList();
+  
+  return limitedProducts.map((product) => Product.fromJson(product)).toList();
+} else {
+  throw Exception('Failed to load products');
+}
+
   }
 
   @override
@@ -113,11 +92,12 @@ class ProductItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children:[
+            
             InkWell(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(
-                      builder: (context) =>  ProductDetailScreen(product: product,),
+                      builder: (context) =>  ProductDetailScreen(product: product),
                     ));
               },
               child: product.image != null
@@ -188,12 +168,12 @@ class ProductItem extends StatelessWidget {
                   // "Buy Now" button
                   ElevatedButton.icon(
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ProductDetailScreen(product: product),
-                      //   ),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProductsPage(),
+                        ),
+                      );
                     },
                     icon: const Icon(CupertinoIcons.bag_fill, color: Colors.black),
                     label: const Text('Buy Now'),

@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vehicle_app/screens/CartSummary_Screen.dart';
+import 'package:vehicle_app/screens/home_screen.dart';
+import 'package:vehicle_app/widgets/items_widget.dart';
 import 'package:vehicle_app/widgets/navbar_roots.dart';
 import 'package:vehicle_app/widgets/product_items.dart';
 class ProductsPage extends StatefulWidget {
@@ -20,43 +24,43 @@ class _ProductsPageState extends State<ProductsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_sharp,
-          size: 32, 
-          color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-          ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => const NavbarRoots(),
-                    ));
-          },
+        automaticallyImplyLeading: false,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        title: Image.asset(
+          'images/wordlogo.png',
+           height: 130,
+           fit: BoxFit.contain,
         ),
-        title: Text(
-          "Products",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black,
-          ),
-        ),
-        centerTitle: true,
         actions: [
+          IconButton(
+            icon: Icon(CupertinoIcons.bag_fill,
+            color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CartSummaryPage(),
+                        ),
+                      );
+            },
+          ),
           IconButton(
             onPressed: () {
               _showFilterDialog();
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.filter_list,
               size: 32,
-              color: Color.fromARGB(255, 255, 196, 0),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
             ),
           ),
         ],
@@ -68,7 +72,9 @@ class _ProductsPageState extends State<ProductsPage> {
           children: [
             _buildSearchBar(context),
             const SizedBox(height: 20),
-            ProductItems(
+            _buildPromotionBanner(), // Add this promotional banner here
+            const SizedBox(height: 20),
+            ItemsWidget(
               searchQuery: _searchQuery,
               minPrice: _selectedMinPrice,
               maxPrice: _selectedMaxPrice,
@@ -86,6 +92,75 @@ class _ProductsPageState extends State<ProductsPage> {
       ),
     );
   }
+
+  Widget _buildPromotionBanner() {
+    return Stack(
+      children: [
+        Container(
+          height: 250, // Adjust height as per your need
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            image: const DecorationImage(
+              image: AssetImage('images/gtr.jpg'), // Your background image
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Container(
+          height: 250,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(
+              colors: [
+                Colors.black.withOpacity(0.3),
+                Colors.black.withOpacity(0.3),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 20,
+          left: 20,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                '50% Special Offer',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Summer Sale',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Shop Now >',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
 
   // Method to build a modern search bar
   Widget _buildSearchBar(BuildContext context) {

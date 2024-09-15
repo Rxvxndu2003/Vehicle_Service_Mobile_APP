@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Vehicle {
-  final String id;  // Add an ID to identify the vehicle
+  final String id;
   final String fullName;
   final String vehicleName;
   final String vehicleNumber;
@@ -20,9 +20,9 @@ class Vehicle {
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     return Vehicle(
-      id: json['id'].toString(), // Ensure the ID is a string
+      id: json['id'].toString(),
       fullName: json['full_name'],
-      vehicleName: json['vehicle_name'] ?? 'N/A',  // Handle nullable fields
+      vehicleName: json['vehicle_name'] ?? 'N/A',
       vehicleNumber: json['vehicle_number'] ?? 'N/A',
       made: json['made'] ?? 'N/A',
     );
@@ -38,22 +38,21 @@ class VehiclesWidget extends StatefulWidget {
 
 class _VehiclesWidgetState extends State<VehiclesWidget> {
   List<Vehicle> vehicles = [];
+  bool isLoading = true;  // Add a loading state
 
   @override
   void initState() {
     super.initState();
-    fetchVehicles();  // Fetch vehicles when the widget initializes
+    fetchVehicles();
   }
 
-  // Function to get the authentication token from SharedPreferences
   Future<String?> getAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
 
-  // Function to fetch vehicles from the API
   Future<void> fetchVehicles() async {
-    final token = await getAuthToken(); // Retrieve the token
+    final token = await getAuthToken();
 
     if (token == null) {
       print('Authentication token not found.');
@@ -63,17 +62,16 @@ class _VehiclesWidgetState extends State<VehiclesWidget> {
       return;
     }
 
-    print('Auth Token: $token'); // Log the token
+    print('Auth Token: $token');
 
     final response = await http.get(
-      Uri.parse('https://4gbxsolutions.com/api/vehicles/get'), // Ensure this is the correct API endpoint
+      Uri.parse('https://4gbxsolutions.com/api/vehicles/get'),  // Ensure the API fetches vehicles for the logged-in user
       headers: {
-        'Authorization': 'Bearer $token', // Use the retrieved token here
+        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
     );
 
-    // Print the response for debugging
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
 
@@ -81,19 +79,27 @@ class _VehiclesWidgetState extends State<VehiclesWidget> {
       try {
         List<dynamic> jsonData = jsonDecode(response.body);
 
-        // Convert JSON data to a list of Vehicle objects
-        List<Vehicle> fetchedVehicles = jsonData.map((json) => Vehicle.fromJson(json)).toList();
+        if (jsonData.isNotEmpty) {
+          List<Vehicle> fetchedVehicles = jsonData.map((json) => Vehicle.fromJson(json)).toList();
 
-        // Update the state with the fetched vehicles
-        setState(() {
-          vehicles = fetchedVehicles;
-        });
-        print("Updated _vehicles state: $vehicles");
+          setState(() {
+            vehicles = fetchedVehicles;
+            isLoading = false;
+          });
+        } else {
+          setState(() {
+            vehicles = [];
+            isLoading = false;
+          });
+        }
       } catch (e) {
         print('Error decoding JSON: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to parse data.')),
         );
+        setState(() {
+          isLoading = false;
+        });
       }
     } else if (response.statusCode == 401) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -103,12 +109,14 @@ class _VehiclesWidgetState extends State<VehiclesWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load vehicles: ${response.statusCode}')),
       );
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
-  // Function to delete a vehicle
   Future<void> deleteVehicle(String id) async {
-    final token = await getAuthToken(); // Retrieve the token
+    final token = await getAuthToken();
 
     if (token == null) {
       print('Authentication token not found.');
@@ -119,7 +127,7 @@ class _VehiclesWidgetState extends State<VehiclesWidget> {
     }
 
     final response = await http.delete(
-      Uri.parse('https://4gbxsolutions.com/api/vehicles/$id'), // Use the DELETE route with vehicle ID
+      Uri.parse('https://4gbxsolutions.com/api/vehicles/$id'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -140,7 +148,7 @@ class _VehiclesWidgetState extends State<VehiclesWidget> {
               TextButton(
                 child: const Text('OK'),
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop();
                 },
               ),
             ],
@@ -160,30 +168,36 @@ class _VehiclesWidgetState extends State<VehiclesWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
-            Text(
+          Text(
             "About Vehicle",
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.black
-                            : Colors.black,
+              color: Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.black,
             ),
           ),
           const SizedBox(height: 15),
-          ...vehicles.map((vehicle) => Column(
-            children: [
-              buildVehicleCard(vehicle),
-              const SizedBox(height: 10), // Add space between cards
-            ],
-          )).toList(),
+          isLoading
+              ? const CircularProgressIndicator()  // Display a loader while fetching data
+              : vehicles.isEmpty
+                  ? const Text(
+                      "You haven't added any Vehicle !!!",  // Show message if no vehicles found
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    )
+                  : Column(
+                      children: vehicles.map((vehicle) => Column(
+                        children: [
+                          buildVehicleCard(vehicle),
+                          const SizedBox(height: 10),
+                        ],
+                      )).toList(),
+                    ),
           const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  // Function to build a card widget for each vehicle
   Widget buildVehicleCard(Vehicle vehicle) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -218,7 +232,7 @@ class _VehiclesWidgetState extends State<VehiclesWidget> {
               ),
               trailing: const CircleAvatar(
                 radius: 25,
-                backgroundImage: AssetImage("images/Aqua.jpeg"), // Update with your asset path
+                backgroundImage: AssetImage("images/Aqua.jpeg"),  // Use your asset path
               ),
             ),
             const Padding(
@@ -233,50 +247,26 @@ class _VehiclesWidgetState extends State<VehiclesWidget> {
               children: [
                 Row(
                   children: [
-                    const Icon(
-                      Icons.calendar_month,
-                      color: Colors.black54,
-                    ),
+                    const Icon(Icons.calendar_month, color: Colors.black54),
                     const SizedBox(width: 5),
-                    Text(
-                      vehicle.made,
-                      style: const TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
+                    Text(vehicle.made, style: const TextStyle(color: Colors.black54)),
                   ],
                 ),
                 Row(
                   children: [
-                    const Icon(
-                      Icons.location_city_sharp,
-                      color: Colors.black54,
-                    ),
+                    const Icon(Icons.location_city_sharp, color: Colors.black54),
                     const SizedBox(width: 5),
-                    const Text(
-                      "Kegalle",  // You can customize this field if needed
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
+                    const Text("Kegalle", style: TextStyle(color: Colors.black54)),
                   ],
                 ),
                 Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
-                        shape: BoxShape.circle,
-                      ),
+                      decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle),
                     ),
                     const SizedBox(width: 5),
-                    const Text(
-                      "Registered",
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
+                    const Text("Registered", style: TextStyle(color: Colors.black54)),
                   ],
                 ),
               ],
@@ -287,7 +277,7 @@ class _VehiclesWidgetState extends State<VehiclesWidget> {
               children: [
                 InkWell(
                   onTap: () {
-                    deleteVehicle(vehicle.id); // Call the delete function with vehicle ID
+                    deleteVehicle(vehicle.id);
                   },
                   child: Container(
                     width: 150,

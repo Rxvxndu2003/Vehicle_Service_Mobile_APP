@@ -49,6 +49,7 @@ class Appointment {
   final String location;
   final String schedule_date;
   final String schedule_time;
+  final bool is_completed;
 
   Appointment({
     required this.id,
@@ -58,6 +59,7 @@ class Appointment {
     required this.location,
     required this.schedule_date,
     required this.schedule_time,
+    required this.is_completed,
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
@@ -68,7 +70,8 @@ class Appointment {
       service: Service.fromJson(json['services']),
       location: json['location'] ?? 'N/A',
       schedule_date: json['schedule_date'] ?? 'N/A',
-      schedule_time: json['schedule_time'] ?? 'N/A'
+      schedule_time: json['schedule_time'] ?? 'N/A',
+      is_completed: json['is_completed'] == 1,
     );
   }
 }
@@ -82,16 +85,18 @@ class UpcomingSchedule extends StatefulWidget {
 class _UpcomingScheduleState extends State<UpcomingSchedule> {
   List<Appointment> appointments = [];
 
+  @override
   void initState() {
     super.initState();
-    fetchAppointments();  // Fetch vehicles when the widget initializes
+    fetchAppointments();  // Fetch appointments when the widget initializes
   }
+
   Future<String?> getAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
 
-  // Function to fetch vehicles from the API
+  // Function to fetch appointments from the API
   Future<void> fetchAppointments() async {
     final token = await getAuthToken(); // Retrieve the token
 
@@ -121,14 +126,14 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
       try {
         List<dynamic> jsonData = jsonDecode(response.body);
 
-        // Convert JSON data to a list of Vehicle objects
+        // Convert JSON data to a list of Appointment objects
         List<Appointment> fetchedAppointments = jsonData.map((json) => Appointment.fromJson(json)).toList();
 
-        // Update the state with the fetched vehicles
+        // Update the state with the fetched appointments
         setState(() {
           appointments = fetchedAppointments;
         });
-        print("Updated _vehicles state: $appointments");
+        print("Updated _appointments state: $appointments");
       } catch (e) {
         print('Error decoding JSON: $e');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -141,7 +146,7 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load vehicles: ${response.statusCode}')),
+        SnackBar(content: Text('Failed to load appointments: ${response.statusCode}')),
       );
     }
   }
@@ -158,7 +163,7 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
     }
 
     final response = await http.delete(
-      Uri.parse('https://4gbxsolutions.com/api/appointments/$id'), // Use the DELETE route with vehicle ID
+      Uri.parse('https://4gbxsolutions.com/api/appointments/$id'), // Use the DELETE route with appointment ID
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -188,7 +193,7 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete vehicle: ${response.statusCode}')),
+        SnackBar(content: Text('Failed to delete appointment: ${response.statusCode}')),
       );
     }
   }
@@ -198,9 +203,9 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
-        children:  [
-             const Text(
-            "About Schedule",
+        children: [
+          const Text(
+            "Upcoming Schedule",
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -208,20 +213,32 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
             ),
           ),
           const SizedBox(height: 15),
-          ...appointments.map((appointment) => Column(
-            children: [
-              buildVehicleCard(appointment),
-              const SizedBox(height: 10), // Add space between cards
-            ],
-          )).toList(),
+          // Check if there are no appointments
+          if (appointments.isEmpty)
+            const Center(
+              child: Text(
+                "User haven't any Schedule !!!",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+            )
+          else
+            ...appointments.map((appointment) => Column(
+              children: [
+                buildAppointmentCard(appointment),
+                const SizedBox(height: 10), // Add space between cards
+              ],
+            )).toList(),
           const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  // Function to build a card widget for each vehicle
-  Widget buildVehicleCard(Appointment appointment) {
+  // Function to build a card widget for each appointment
+  Widget buildAppointmentCard(Appointment appointment) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
@@ -317,16 +334,17 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
+                      decoration: BoxDecoration(
+                        color: appointment.is_completed ? Colors.green : Colors.red,
                         shape: BoxShape.circle,
                       ),
                     ),
                     const SizedBox(width: 5),
-                    const Text(
-                      "Registered",
-                      style: TextStyle(
+                    Text(
+                      appointment.is_completed ? "Done" : "Undone",
+                      style: const TextStyle(
                         color: Colors.black54,
+                        fontSize: 16,
                       ),
                     ),
                   ],
@@ -339,7 +357,7 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
               children: [
                 InkWell(
                   onTap: () {
-                      deleteAppointment(appointment.id);
+                    deleteAppointment(appointment.id);
                   },
                   child: Container(
                     width: 150,

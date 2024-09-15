@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:vehicle_app/controllers/user_controller.dart';
 import 'package:vehicle_app/models/profile_details.dart';
+import 'package:vehicle_app/widgets/navbar_roots.dart';
 
 class ProfileDetailPage extends StatefulWidget {
   const ProfileDetailPage({super.key});
@@ -35,12 +36,53 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text(
-          'Profile Details',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        elevation: 0,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_sharp,
+          size: 28, 
+          color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                            ),
+          onPressed: () {
+           Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NavbarRoots(initialIndex: 4,),
+              ),
+            );
+          },
         ),
+        title: Text(
+          "Profile Details",
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications_outlined,
+              size: 28, // Size of the notification icon
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () {
+              // Handle notification icon press
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<Profile>(
         future: futureProfile,
@@ -64,8 +106,8 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    userController.userName.value.isNotEmpty
-                        ? userController.userName.value
+                    userController.name.value.isNotEmpty
+                        ? userController.name.value
                         : "Guest Name", // Default name if not logged in
                     style: const TextStyle(
                       fontSize: 30,
@@ -74,8 +116,8 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    userController.userEmail.value.isNotEmpty
-                        ? userController.userEmail.value
+                    userController.email.value.isNotEmpty
+                        ? userController.email.value
                         : "guest@example.com", // Default email if not logged in
                     style: TextStyle(
                       fontSize: 18,
